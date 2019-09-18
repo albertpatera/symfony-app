@@ -1,0 +1,18 @@
+version: "2"
+services:
+   pma:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+     - 888:80
+   mysql_srv:
+    container_name: myql_srv
+    image: mysql/mysql-server
+    
+   nginx_server:
+    container_name: nginxxx
+    image: nginx:latest
+    ports:
+     - 1597:80
+   
+     

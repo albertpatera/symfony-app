@@ -1,1 +1,1 @@
-# symfony-app
+# symfony-web

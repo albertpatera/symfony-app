@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+   <div class="row">
+      <div class="col-md-8 ml-5">
+
+         <div class="card col-md-8 mx-auto">
+            {% if article.titleImage == NULL %}
+               <img src="http://www.sdc.com.my/data/data/noimage.gif"  alt="undefined" class="col-md-8">
+            {% else %}
+               <img src="{{ article.titleImage }}" class="card-img-top" alt="...">
+            {% endif %}
+
+            <div class="card-body">
+               <h5 class="card-title">{{ article.title }}e</h5>
+               <p class="card-text">{{ article.content }}</p>
+               <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}
+
+{% block print %}
+   {{ form(articleForm) }}
+{% endblock %}
+
