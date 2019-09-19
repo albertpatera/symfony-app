@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Menu;
 use App\Repository\ArticleRepository;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -24,6 +26,7 @@ use Symfony\Component\Debug\Debug;
 /**
  * Kontroler pro vykreslování článků.
  * @package App\Controller
+ * User
  */
 class ArticleController extends AbstractController
 {
@@ -36,7 +39,7 @@ class ArticleController extends AbstractController
      * @Route("/{url?uvod}", name="article")
      * @Entity("article", expr="repository.findOneByUrl(url)")
      */
-    public function index(Request $request, ArticleRepository $article): Response
+    public function index(Request $request, ArticleRepository $article, LoggerInterface $logger): Response
     {
         $defaultData = ['message' => 'Type your message here'];
         $form = $this->createFormBuilder($defaultData)
@@ -44,14 +47,18 @@ class ArticleController extends AbstractController
             ->add('url', TextType::class, [ 'attr' => ['placeholder' => 'url', 'class' => 'text-input form-control']])
             ->add('perex', TextareaType::class, [ 'attr' => ['placeholder' => 'perex', 'class' => 'text-input form-control',]])
             ->add('content', TextareaType::class, ['attr' => ['class' => 'text-input form-control summernote','placeholder' => 'content', 'id' => 'summernote'], ])
-            ->add('title_image', TextType::class, [ 'attr' => ['class' => 'text-input form-control','placeholder' => 'title image or url', 'required' => false]])
+            ->add('title_image', TextType::class, [ 'attr' => ['class' => 'text-input form-control','placeholder' => 'title image or url', 'required' => 0]])
             ->add('date_created', TextType::class, ['attr' => ['style' => 'display:none', 'value' =>  date('Y-m-d h:i:s') ]])
             ->add('send', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
             ->getForm();
 
+       // dump($form);
+
         $form->handleRequest($request);
+        $logger->warning('some text will be here');
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             // data is an array with "name", "email", and "message" keys
 
             $em = $this->getDoctrine()->getManager();
@@ -76,7 +83,8 @@ class ArticleController extends AbstractController
             $articleVar->setTitleImage($title_image);
             $articleVar->setDateCreated($date_created);
             print_r($articleVar);
-            Debug::enable();
+            //Debug::enable();
+         //   $logger->info(' someone added new article, called ' . $title);
             try {
                 $em->persist($articleVar);
                 $em->flush();
@@ -88,17 +96,29 @@ class ArticleController extends AbstractController
             $this->addFlash('notice', 'Article was successfully added');
         }
         $row = $this->getDoctrine()->getRepository(Article::class)->findAll();
-        foreach ($row as $item => $value)
+        /**
+         * @TODO predelat do normalniho
+         */
+
+        $rowMenu = $this->getDoctrine()->getRepository(Menu::class)->findAll();
+        dump($rowMenu);
+
+        foreach ($rowMenu as $itemM => $valueM)
         {
+            $tempMenu[] = $valueM;
 
-                $temp[$item] = $value;
+        }
 
+        foreach ($row as $item => $value) {
+            $temp[] = $value;
         }
 
 
         return $this->render('article/index.html.twig', [
             'articleForm' => $form->createView(),
            'temp' => empty($temp) ? 'no result returned' : $temp,
+            'menu' => $tempMenu
+
         ]);
     }
     public function editor(\App\Entity\Article $article) : Response
@@ -115,12 +135,14 @@ class ArticleController extends AbstractController
      * @Route ("article/detail/{id?1}")
      * @Entity("article", expr="repository.findOneByUrl(url)")
      */
-    public function detailAction(Request $request) : Response
+    public function detailAction(LoggerInterface $logger, Request $request) : Response
     {
         $id = $request->get('id');
-        //dump($this->getParameter(5));
+        $logger->info('eee');
+        //dump($this->getParameter(5));;
         dump($id);
         $rowDetail = $this->getDoctrine()->getRepository(Article::class)->findOneBy(['id' => $request->get('id')]);
+
         dump($rowDetail);
         dump($request->query->get('title'));
         foreach ($rowDetail as $item => $detail)
@@ -132,15 +154,24 @@ class ArticleController extends AbstractController
 
 
         return $this->render('article/detail/detail.html.twig', [
-            'article' => empty($rowDetail) ? '' : $rowDetail
+            'article' => empty($rowDetail) ? '' : $rowDetail,
+
         ]);
     }
-
     /**
-     * @Route("about", name="about")
+     * Načte článek podle jeho URL a předá jej do šablony.
+     * Pokud není zadaná URL, nastaví se jí hodnota pro výchozí článek.
+     * @param Menu $menu článek
+     * @return Response HTTP odpověď
+     * @throws NotFoundHttpException Jestliže článek s danou URL nebyl nalezen.
+     * @Route("article")
      */
-    public function aboutAction() : Response
+    public function menuAction() : Response
     {
-        return $this->render('article/editor/edit.html.twig');
+        dump('loaded');
+        return $this->render('menu/index.html.twig', [
+            'article' => empty($rowDetail) ? '' : $rowDetail,
+
+        ]);
     }
 }

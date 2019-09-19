@@ -1,24 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-
+   {{ article.title|raw }}
 {% endblock %}
 
 {% block body %}
    <div class="row">
-      <div class="col-md-8 ml-5">
+      <div class="col-md-9">
 
-         <div class="card col-md-8 mx-auto">
-            {% if article.titleImage == NULL %}
+         <div class="card col-md-9 mx-auto">
+            {% if article.titleImage == '' %}
                <img src="http://www.sdc.com.my/data/data/noimage.gif"  alt="undefined" class="col-md-8">
             {% else %}
                <img src="{{ article.titleImage }}" class="card-img-top" alt="...">
             {% endif %}
 
             <div class="card-body">
-               <h5 class="card-title">{{ article.title }}e</h5>
-               <p class="card-text">{{ article.content }}</p>
-               <a href="#" class="btn btn-primary">Go somewhere</a>
+               <h1 class="card-title display-5 card-heading">{{ article.title }}e</h1>
+               <p class="card-text">{{ article.content|raw }}</p>
+               
+
+            </div>
+            <div class="card-footer text-centerr">
+               <a href="#"><span class="fa fa-facebook"></span> Sdílet na facebooku</a>
+               | <a href="#"><span class="fa fa-envelope"></span> Poslat e-mailem</a>
+               | <a href="#"><span class="fa fa-twitter"></span> Sdílet na Twitteru</a>
+               | <a href="#"><span class="fa fa-globe"></span> Vložit na web</a>
             </div>
          </div>
       </div>

@@ -9,33 +9,50 @@
 
     <!-- include summernote css/js -->
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.summernote').summernote();
-        });
-    </script>
+
 
 </head>
 <article>
+
     <header>
-       <div class="container-fluid">
+        <h1 id="header" class="text-center display-1 text-info" style="text-transform: uppercase">website administration</h1>
+        <hr>
+            <ul class="nav">
+                <li title="home" style="display: inline-block"><a href="/"><span class="fa fa-home"></span> </a> </li>
+                {% for item in menu %}
 
-           <div class="row">
-               <div class="col-md-4">
-                   {% block articleForm %}{% endblock %}
-               </div>
-           </div>
+                    {% if item.idParent > 0 %}
 
-           hhhhh
-       </div>
+                        <li id="{{ item.name|lower }}_{{ item.id }}" class="dis nav-item" style="display: block"><a class="nav-link text-secondary" href="{% if item.redirectToUrl != NULL %} 'http://' {{ item.redirectToUrl }}" target="_blank {% else %}{{ item.redirectTo }}{% endif %}">{{ item.name }}</a></li>
+                    {% else %}
+                        <li  id="{{ item.name|lower }}_{{ item.id }}" class="nav-item" style="display: inline-block; list-style-type: none" title="{{ item.description }}"><a class="nav-link" id="{{ item.id }}-{{ item.name }}" title="{{ item.description }}" href="{{ item.redirectTo }}">{{ item.name }}</a> </li>
+
+                    {% endif %}
+
+                {%  endfor%}
+            </ul>
+        <hr>
+
     </header>
     <section>
+        <div class="container-fluid">
+
+
+        </div>
         {% block body %}{% endblock %} {# Vložení obsahu do šablony. #}
     </section>
 </article>
 </html>
 
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+    <script src="/js/sticky_menu/jquery.sticky.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote();
+            $("header").sticky({topSpacing:0});
+        });
+    </script>
+{% endblock %}

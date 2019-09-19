@@ -10,8 +10,12 @@ app_article:
   path: /article
   controller: App\Controller\ArticleController::index
 
+
+menu_item:
+  path: /menu/item
+  controller: App\Controller\MenuController::index
+
 edit_article:
   path: /article/edit
-  controller: App\Controller\ArticleController::editor
-
+  controller: App\Controller\MenuController
 

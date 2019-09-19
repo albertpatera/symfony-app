@@ -1,27 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% for header in temp %}
-        {{ header.title }}
-    {% endfor %}
-{% endblock %}
+    {% endblock %}
 
 {% block body %}
 {{ temp|json_encode }}
 
+    <div class="row">
 
+        <div class="col-md-4">
+            {% block articleForm %}
+                {{ form(articleForm) }}
+            {% endblock %}
+        </div>
+    </div>
     {% for item in temp %}
         <div class="card" style="width: 18rem; display: inline-block">
             {% if item.titleImage != 'NULL' %}
             <img src="{{ item.titleImage }}" class="card-img-top" alt="...">
             {% else %}
-                <img src="http://www.sdc.com.my/data/data/noimage.gif" style="width: 18rem" alt="undefined">
+                <img src="http://www.sdc.com.my/data/data/noimage.gif" style="width: 18rem; height: 250px!important;" alt="undefined">
                 {% endif %}
             <a href="article/detail/{{ item.id }}"><span class="fa fa-link"></span> </a>
             <div class="card-body">
                 <h5 class="card-title">{{ item.title }}e</h5>
-                <p class="card-text">{{ item.content }}</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <p class="card-text">{{ item.content|raw }}</p>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                            <h6><small>{{ item.dateCreated|date("d.m.Y") }}</small></h6>
+                        </div>
+                        <div class="col">
+                            <h6><small><a href="article/detail/{{ item.id }}"> Read more....</a></small></h6>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -29,7 +43,5 @@
     {% endfor %}
 {% endblock %}
 
-{% block articleForm %}
-    {{ form(articleForm) }}
-{% endblock %}
+
 
