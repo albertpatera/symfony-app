@@ -21,12 +21,12 @@
         <h1 id="header" class="text-center display-1 text-info" style="text-transform: uppercase">website administration</h1>
         <hr>
             <ul class="nav">
-                <li title="home" style="display: inline-block"><a href="/"><span class="fa fa-home"></span> </a> </li>
+                <li title="home" style="display:block"><a href="/" class="nav nav-link text-secondary"><span class="fa fa-home"></span> </a> </li>
                 {% for item in menu %}
 
                     {% if item.idParent > 0 %}
 
-                        <li id="{{ item.name|lower }}_{{ item.id }}" class="dis nav-item" style="display: block"><a class="nav-link text-secondary" href="{% if item.redirectToUrl != NULL %} 'http://' {{ item.redirectToUrl }}" target="_blank {% else %}{{ item.redirectTo }}{% endif %}">{{ item.name }}</a></li>
+                        <li id="{{ item.name|lower }}_{{ item.id }}" class="dis nav-item" style="display: block"><a  title="{{ item.description }}" class="nav-link text-secondary" href="{% if item.redirectToUrl != NULL %} 'http://' {{ item.redirectToUrl }}" target="_blank {% else %}{{ item.redirectTo }}{% endif %}">{{ item.name }}</a></li>
                     {% else %}
                         <li  id="{{ item.name|lower }}_{{ item.id }}" class="nav-item" style="display: inline-block; list-style-type: none" title="{{ item.description }}"><a class="nav-link" id="{{ item.id }}-{{ item.name }}" title="{{ item.description }}" href="{{ item.redirectTo }}">{{ item.name }}</a> </li>
 
@@ -40,9 +40,9 @@
     <section>
         <div class="container-fluid">
 
-
+            {% block body %}{% endblock %} {# Vložení obsahu do šablony. #}
         </div>
-        {% block body %}{% endblock %} {# Vložení obsahu do šablony. #}
+
     </section>
 </article>
 </html>

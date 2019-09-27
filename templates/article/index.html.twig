@@ -7,12 +7,14 @@
 {{ temp|json_encode }}
 
     <div class="row">
+    <div class="col-md-10 ml-5">
 
         <div class="col-md-4">
             {% block articleForm %}
-                {{ form(articleForm) }}
+                    {{ form(articleForm) }}
             {% endblock %}
         </div>
+    </div>
     </div>
     {% for item in temp %}
         <div class="card" style="width: 18rem; display: inline-block">
